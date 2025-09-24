@@ -646,6 +646,12 @@
                     <span>订单</span>
                 </a>
             </div>
+            <!--<div class="col">
+                <a href="#" class="btn-nav" data-section="user-section">
+                    <i class="fas fa-user-circle"></i>
+                    <span>我的</span>
+                </a>
+            </div>-->
             <div class="col-3">
                 <a href="#" class="btn-nav" data-section="customers-section">
                     <i class="fas fa-users"></i>
@@ -1935,6 +1941,23 @@
                             renderHistoryCustomerOptions();
                         }
                     }
+
+                    //需要从从商品中增加库存
+                    orders[orderIndex].items.forEach(item => {
+                        const productsIndex = products.findIndex(p => p.id === item.id);
+
+                        if (productsIndex !== -1 && products[productsIndex].stock) {
+                            products[productsIndex].stock += 1;
+                            if (products[productsIndex].stock < 0) {
+                                products[productsIndex].stock = 0;
+                            }
+                            localStorage.setItem('orange-products', JSON.stringify(products));
+
+                            // 更新商品列表显示
+                            renderProducts();
+                        }
+
+                    });
 
                     // 删除订单
                     orders.splice(orderIndex, 1);
