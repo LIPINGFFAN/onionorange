@@ -476,7 +476,7 @@
                         <button class="btn btn-success btn-lg py-3" id="complete-order">
                             <i class="fas fa-check-circle me-2"></i> 完成订单
                         </button>
-                        <button class="btn btn-warning btn-lg py-3" id="modify-order">
+                        <button style="display:none" class="btn btn-warning btn-lg py-3" id="modify-order">
                             <i class="fas fa-edit me-2"></i> 修改订单
                         </button>
                         <button class="btn btn-danger btn-lg py-3" id="cancel-order">
@@ -954,6 +954,30 @@
 
             document.getElementById('confirm-import').addEventListener('click', confirmImport);
 
+            //添加编辑当前订单金额事件监听器
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('price-editable')) {
+                    enablePriceEditing(e.target);
+                }
+            });
+
+            document.addEventListener('blur', function (e) {
+                if (e.target.classList.contains('price-edit-input')) {
+                    savePriceChange(e.target);
+                }
+            }, true); // 使用捕获阶段确保blur事件能触发
+
+            // 添加键盘事件支持
+            document.addEventListener('keydown', function (e) {
+                if (e.target.classList.contains('price-edit-input')) {
+                    if (e.key === 'Enter') {
+                        savePriceChange(e.target);
+                    } else if (e.key === 'Escape') {
+                        cancelPriceEdit(e.target);
+                    }
+                }
+            });
+
             // 初始化显示
             renderProducts();
             renderCurrentOrder();
@@ -1289,18 +1313,39 @@
             currentOrder.items.forEach((item, index) => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'current-order-item';
+                //itemElement.innerHTML = `
+                //    <div>
+                //        <h6 class="mb-0">${item.name}</h6>
+                //        <small class="text-muted">编号: ${item.code}</small>
+                //    </div>
+                //    <div class="d-flex align-items-center">
+                //        <span class="me-3 fw-bold">¥${item.price.toFixed(2)}</span>
+                //        <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
+                //            <i class="fas fa-times"></i>
+                //        </button>
+                //    </div>
+                //`;
+
+
+
+
                 itemElement.innerHTML = `
-                    <div>
-                        <h6 class="mb-0">${item.name}</h6>
-                        <small class="text-muted">编号: ${item.code}</small>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <span class="me-3 fw-bold">¥${item.price.toFixed(2)}</span>
-                        <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `;
+                <div>
+                    <h6 class="mb-0">${item.name}</h6>
+                    <small class="text-muted">编号: ${item.code}</small>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="me-3 fw-bold price-editable" data-index="${index}" data-original-price="${item.price}">
+                        ¥${item.price.toFixed(2)}
+                    </span>
+                    <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+
+
+
                 orderItems.appendChild(itemElement);
             });
 
@@ -2545,6 +2590,70 @@
                 'info': '信息：'
             };
             return titles[type] || '提示：';
+        }
+
+        // 启用价格编辑函数
+        function enablePriceEditing(element) {
+            const index = element.getAttribute('data-index');
+            const originalPrice = parseFloat(element.getAttribute('data-original-price'));
+
+            // 创建输入框
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'price-edit-input form-control form-control-sm';
+            input.value = originalPrice.toFixed(2);
+            input.setAttribute('data-index', index);
+            input.setAttribute('data-original-price', originalPrice);
+            input.style.width = '100px';
+            input.style.display = 'inline-block';
+
+            // 替换span为输入框
+            element.parentNode.replaceChild(input, element);
+            input.focus();
+            input.select();
+        }
+
+        // 保存价格修改
+        function savePriceChange(input) {
+            const index = input.getAttribute('data-index');
+            const originalPrice = parseFloat(input.getAttribute('data-original-price'));
+            let newPrice = parseFloat(input.value);
+
+            // 验证输入
+            if (isNaN(newPrice) || newPrice < 0) {
+                newPrice = originalPrice; // 恢复原价格
+            }
+
+            // 更新数据（这里需要根据你的实际数据结构调整）
+            // items[index].price = newPrice;
+            currentOrder.items[index].price = newPrice;
+            // 更新显示
+            renderCurrentOrder();
+
+            // 创建新的显示元素
+            const span = document.createElement('span');
+            span.className = 'me-3 fw-bold price-editable';
+            span.setAttribute('data-index', index);
+            span.setAttribute('data-original-price', newPrice);
+            span.textContent = '¥' + newPrice.toFixed(2);
+
+            // 替换输入框为span
+            input.parentNode.replaceChild(span, input);
+
+        }
+
+        // 取消编辑函数
+        function cancelPriceEdit(input) {
+            const index = input.getAttribute('data-index');
+            const originalPrice = parseFloat(input.getAttribute('data-original-price'));
+
+            const span = document.createElement('span');
+            span.className = 'me-3 fw-bold price-editable';
+            span.setAttribute('data-index', index);
+            span.setAttribute('data-original-price', originalPrice);
+            span.textContent = '¥' + originalPrice.toFixed(2);
+
+            input.parentNode.replaceChild(span, input);
         }
     </script>
 </body>
