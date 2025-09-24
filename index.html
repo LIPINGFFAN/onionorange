@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>橘子出单系统</title>
+    <title>橘子的系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
@@ -379,7 +379,7 @@
             <div class="file-operations">
                 <h5><i class="fas fa-folder me-2"></i>商品文件操作</h5>
                 <div class="file-path" id="products-file-path">
-                    提示: 为避免手机缓存（商品数据）被意外情况清理，请及时导出备份。
+                    提示: 为避免商品数据被意外情况清理，请及时导出至本地。
                 </div>
                 <div class="import-export-buttons">
                     <button class="btn btn-success" id="export-products">
@@ -494,7 +494,7 @@
             <div class="file-operations">
                 <h5><i class="fas fa-folder me-2"></i>订单文件操作</h5>
                 <div class="file-path" id="orders-file-path">
-                    提示: 为避免手机缓存（订单数据）被意外情况清理，请及时导出备份。
+                    提示: 为避免订单数据被意外情况清理，请及时导出至本地。
                 </div>
                 <div class="import-export-buttons">
                     <button class="btn btn-success" id="export-orders">
@@ -589,7 +589,7 @@
             <div class="file-operations">
                 <h5><i class="fas fa-folder me-2"></i>客户文件操作</h5>
                 <div class="file-path" id="customers-file-path">
-                    提示: 为避免手机缓存（客户数据）被意外情况清理，请及时导出备份。
+                    提示: 为避免客户数据被意外情况清理，请及时导出至本地。
                 </div>
                 <div class="import-export-buttons">
                     <button class="btn btn-success" id="export-customers">
@@ -837,9 +837,9 @@
 
     <script>
         // 数据存储
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        let customers = JSON.parse(localStorage.getItem('customers')) || [];
+        let products = JSON.parse(localStorage.getItem('orange-products')) || [];
+        let orders = JSON.parse(localStorage.getItem('orange-orders')) || [];
+        let customers = JSON.parse(localStorage.getItem('orange-customers')) || [];
         let currentOrder = {
             id: generateOrderId(),
             items: [],
@@ -995,7 +995,7 @@
 
             if (confirm('确定要清空所有商品吗？此操作不可恢复！')) {
                 products = [];
-                localStorage.setItem('products', JSON.stringify(products));
+                localStorage.setItem('orange-products', JSON.stringify(products));
                 renderProducts();
                 showAlert('所有商品已清空', 'success');
             }
@@ -1010,7 +1010,7 @@
 
             if (confirm('确定要清空所有订单吗？此操作不可恢复！')) {
                 orders = [];
-                localStorage.setItem('orders', JSON.stringify(orders));
+                localStorage.setItem('orange-orders', JSON.stringify(orders));
                 renderOrders();
                 showAlert('所有订单已清空', 'success');
             }
@@ -1025,7 +1025,7 @@
 
             if (confirm('确定要清空所有客户吗？此操作不可恢复！')) {
                 customers = [];
-                localStorage.setItem('customers', JSON.stringify(customers));
+                localStorage.setItem('orange-customers', JSON.stringify(customers));
                 renderCustomers();
                 renderCustomerOptions();
                 renderHistoryCustomerOptions();
@@ -1511,7 +1511,7 @@
 
             // 保存订单
             orders.push({...currentOrder});
-            localStorage.setItem('orders', JSON.stringify(orders));
+            localStorage.setItem('orange-orders', JSON.stringify(orders));
 
             // 更新客户消费总额
             const customerIndex = customers.findIndex(c => c.id === currentOrder.customerId);
@@ -1520,7 +1520,7 @@
                     customers[customerIndex].totalConsumption = 0;
                 }
                 customers[customerIndex].totalConsumption += currentOrder.total;
-                localStorage.setItem('customers', JSON.stringify(customers));
+                localStorage.setItem('orange-customers', JSON.stringify(customers));
 
                 // 更新客户选择框中的显示
                 //renderCustomerOptions();
@@ -1540,7 +1540,7 @@
                         products[productsIndex].stock = 0;
                     }
                     products[productsIndex].stock = products[productsIndex].stock - 1;
-                    localStorage.setItem('products', JSON.stringify(products));
+                    localStorage.setItem('orange-products', JSON.stringify(products));
                 }
 
             });
@@ -1631,7 +1631,7 @@
             }
 
             // 保存到localStorage
-            localStorage.setItem('products', JSON.stringify(products));
+            localStorage.setItem('orange-products', JSON.stringify(products));
 
             // 更新显示
             renderProducts();
@@ -1680,7 +1680,7 @@
             }
 
             // 保存到localStorage
-            localStorage.setItem('customers', JSON.stringify(customers));
+            localStorage.setItem('orange-customers', JSON.stringify(customers));
 
             // 更新显示
             renderCustomers();
@@ -1737,7 +1737,7 @@
         function deleteProduct(id) {
             if (confirm('确定要删除这个商品吗？')) {
                 products = products.filter(p => p.id !== id);
-                localStorage.setItem('products', JSON.stringify(products));
+                localStorage.setItem('orange-products', JSON.stringify(products));
                 renderProducts();
                 showAlert('商品已删除', 'info');
             }
@@ -1754,7 +1754,7 @@
                 }
 
                 customers = customers.filter(c => c.id !== id);
-                localStorage.setItem('customers', JSON.stringify(customers));
+                localStorage.setItem('orange-customers', JSON.stringify(customers));
                 renderCustomers();
                 renderCustomerOptions();
                 renderHistoryCustomerOptions();
@@ -1861,7 +1861,7 @@
 
             // 从历史订单中移除该订单（因为我们将重新保存）
             orders = orders.filter(o => o.id !== orderId);
-            localStorage.setItem('orders', JSON.stringify(orders));
+            localStorage.setItem('orange-orders', JSON.stringify(orders));
             renderOrders();
 
             showAlert('订单已加载到编辑模式', 'info');
@@ -1883,7 +1883,7 @@
                             if (customers[customerIndex].totalConsumption < 0) {
                                 customers[customerIndex].totalConsumption = 0;
                             }
-                            localStorage.setItem('customers', JSON.stringify(customers));
+                            localStorage.setItem('orange-customers', JSON.stringify(customers));
 
                             // 更新客户选择框中的显示
                             renderCustomerOptions();
@@ -1893,7 +1893,7 @@
 
                     // 删除订单
                     orders.splice(orderIndex, 1);
-                    localStorage.setItem('orders', JSON.stringify(orders));
+                    localStorage.setItem('orange-orders', JSON.stringify(orders));
                     renderOrders();
                     showAlert('订单已删除', 'info');
                 }
@@ -2382,7 +2382,7 @@
                 });
 
                 // 保存到localStorage
-                localStorage.setItem('products', JSON.stringify(products));
+                localStorage.setItem('orange-products', JSON.stringify(products));
 
                 // 更新显示
                 renderProducts();
@@ -2418,7 +2418,7 @@
                 });
 
                 // 保存到localStorage
-                localStorage.setItem('orders', JSON.stringify(orders));
+                localStorage.setItem('orange-orders', JSON.stringify(orders));
 
                 // 更新显示
                 renderOrders();
@@ -2460,7 +2460,7 @@
                 });
 
                 // 保存到localStorage
-                localStorage.setItem('customers', JSON.stringify(customers));
+                localStorage.setItem('orange-customers', JSON.stringify(customers));
 
                 // 更新显示
                 renderCustomers();
