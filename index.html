@@ -1939,6 +1939,10 @@
                             // 更新客户选择框中的显示
                             renderCustomerOptions();
                             renderHistoryCustomerOptions();
+                            // 如果当前显示了客户信息，更新显示
+                            if (document.getElementById('selected-customer-info').style.display === 'block') {
+                                document.getElementById('selected-customer-total').textContent = customers[customerIndex].totalConsumption.toFixed(2);
+                            }
                         }
                     }
 
