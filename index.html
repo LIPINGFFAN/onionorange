@@ -1591,10 +1591,10 @@
                         products[productsIndex].stock = 0;
                     }
                     products[productsIndex].stock = products[productsIndex].stock - 1;
-                    localStorage.setItem('orange-products', JSON.stringify(products));
                 }
 
             });
+            localStorage.setItem('orange-products', JSON.stringify(products));
             // 更新商品显示
             renderProducts();
 
@@ -1949,19 +1949,18 @@
                     //需要从从商品中增加库存
                     orders[orderIndex].items.forEach(item => {
                         const productsIndex = products.findIndex(p => p.id === item.id);
-
                         if (productsIndex !== -1 && products[productsIndex].stock) {
                             products[productsIndex].stock += 1;
                             if (products[productsIndex].stock < 0) {
                                 products[productsIndex].stock = 0;
                             }
-                            localStorage.setItem('orange-products', JSON.stringify(products));
-
-                            // 更新商品列表显示
-                            renderProducts();
                         }
 
                     });
+
+                    localStorage.setItem('orange-products', JSON.stringify(products));
+                    // 更新商品列表显示
+                    renderProducts();
 
                     // 删除订单
                     orders.splice(orderIndex, 1);
