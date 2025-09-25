@@ -177,10 +177,10 @@
         }
 
         .order-summary {
-            background: linear-gradient(to right, #dfe6e9, #b2bec3);
-            padding: 20px;
+            background: linear-gradient(to right, #f8f9fa, #f8f9fa);
+            padding: 5px;
             border-radius: 0 0 16px 16px;
-            margin-top: 20px;
+            /*margin-top: 20px;*/
         }
 
         .bottom-nav {
@@ -363,7 +363,7 @@
             max-height: 200px;
             overflow-y: auto;
             border: 1px solid #eaeaea;
-            border-radius: 10px;
+            /*border-radius: 10px;*/
             background-color: #f9fafc;
             transition: all 0.3s ease;
         }
@@ -449,6 +449,33 @@
             height: auto;
             font-size: 18px;
             color: #dee2e6;
+        }
+
+        .tag-currentorder-price {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .tag-currentorder-price2 {
+            background: linear-gradient(45deg, #ff9f43, #ffbe7b);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .order-summary2 {
+            background: linear-gradient(to right, #dfe6e9, #b2bec3);
+            padding: 20px;
+            border-radius: 16px 16px 0 0;
+            font-weight: 700 !important;
+        }
+
+        .badge-currentorder {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: 600;
         }
 
     </style>
@@ -545,9 +572,10 @@
                     </div>
 
                     <div class="card">
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">当前订单</h5>
-                            <span class="badge bg-primary">单号: <span id="current-order-id">ORD-001</span></span>
+                        <div class="bg-white d-flex justify-content-between align-items-center order-summary2">
+                            <h5 class="mb-0" id="order-num" style="font-weight: 700 !important;">总计：0件商品</h5>
+                            <!--<span class="badge bg-primary" style="display:none;">单号: <span id="current-order-id">ORD-001</span></span>-->
+                            <span class="badge-currentorder bg-primary tag-currentorder-price"><span id="order-total">¥0.00</span></span>
                         </div>
                         <div class="card-body p-0">
                             <div id="current-order-items">
@@ -558,9 +586,9 @@
                             </div>
 
                             <div class="order-summary">
-                                <div class="d-flex justify-content-between fs-5 fw-bold">
-                                    <span id="order-num">总计：0件商品</span>
-                                    <span id="order-total">¥0.00</span>
+                                <div class="d-flex justify-content-between fs-5 fw-bold" style=" font-size: 0.9rem !important; font-weight: 300 !important;">
+                                    <span style="margin-left: 20px;">单号:</span>
+                                    <span id="current-order-id" style="margin-right: 20px;">ORD-001</span>
                                 </div>
                             </div>
                         </div>
@@ -1061,31 +1089,22 @@
                 }
             });
 
-            let isSecondReques = false;//避免keydowns事件会重复触发blur事件
             document.addEventListener('blur', function (e) {
                 if (e.target.classList.contains('price-edit-input')) {
-                    if (!isSecondReques) {
-                        isSecondReques = true;
-                        savePriceChange(e.target);
-                    }
-                    else {
-                        isSecondReques = false;
-                    }
-                    
+                    savePriceChange(e.target);
                 }
             }, true); // 使用捕获阶段确保blur事件能触发
 
             // 添加键盘事件支持
-            document.addEventListener('keydown', function (e) {
-                if (e.target.classList.contains('price-edit-input')) {
-                    if (e.key === 'Enter') {
-                        isSecondReques = true;
-                        savePriceChange(e.target);
-                    } else if (e.key === 'Escape') {
-                        cancelPriceEdit(e.target);
-                    }
-                }
-            });
+            //document.addEventListener('keydown', function (e) {
+            //    if (e.target.classList.contains('price-edit-input')) {
+            //        if (e.key === 'Enter') {
+            //            savePriceChange(e.target);
+            //        } else if (e.key === 'Escape') {
+            //            cancelPriceEdit(e.target);
+            //        }
+            //    }
+            //});
 
             // 初始化显示
             renderProducts();
@@ -1423,46 +1442,28 @@
 
             orderItems.innerHTML = '';
 
-            currentOrder.items.slice().reverse().forEach((item, index) => {
+
+            for (let index = currentOrder.items.length - 1; index >= 0; index--) {
+                const item = currentOrder.items[index];
                 const itemElement = document.createElement('div');
                 itemElement.className = 'current-order-item';
-                //itemElement.innerHTML = `
-                //    <div>
-                //        <h6 class="mb-0">${item.name}</h6>
-                //        <small class="text-muted">编号: ${item.code}</small>
-                //    </div>
-                //    <div class="d-flex align-items-center">
-                //        <span class="me-3 fw-bold">¥${item.price.toFixed(2)}</span>
-                //        <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
-                //            <i class="fas fa-times"></i>
-                //        </button>
-                //    </div>
-                //`;
 
                 itemElement.innerHTML = `
                 <div>
-                    <h6 class="mb-0 list-overtext-currentorder" style="max-width:${window.innerWidth-282}px;">${item.name}</h6>
+                    <h6 class="mb-0 list-overtext-currentorder" style="font-weight: 700 !important;max-width:${window.innerWidth - 282}px;">${item.name}</h6>
                     <small class="text-muted">编号: ${item.code}（${item.style}）</small>                       
                 </div>
                 <div class="d-flex align-items-center">
-                    <div class="product-title">
-                        <span class="product-tag ${getTypeClass(item.type)}">
-                                <i class="fas fa-certificate tag-icon"></i>${item.type}
-                        </span>
-                        <span class="me-3 fw-bold price-editable" data-index="${index}" data-original-price="${item.price}">
+                        <span class="me-3 fw-bold price-editable tag-currentorder-price2" data-index="${index}" data-original-price="${item.price}">
                             ¥${item.price.toFixed(2)}
                         </span>
-                    </div>
                     <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-            `;
-
-
-
+            `   ;
                 orderItems.appendChild(itemElement);
-            });
+            }
 
             // 计算并显示总价
             currentOrder.total = currentOrder.items.reduce((total, item) => total + item.price, 0);
