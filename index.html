@@ -433,6 +433,13 @@
             text-overflow: ellipsis;
             max-width: 200px;
         }
+
+        .list-overtext-currentorder {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 130px;
+        }
     </style>
 </head>
 <body>
@@ -1423,8 +1430,8 @@
 
                 itemElement.innerHTML = `
                 <div>
-                    <h6 class="mb-0">${item.name}（${item.style}</h6>
-                    <small class="text-muted">编号: ${item.code}</small>                       
+                    <h6 class="mb-0 list-overtext-currentorder">${item.name}</h6>
+                    <small class="text-muted">编号: ${item.code}（${item.style}）</small>                       
                 </div>
                 <div class="d-flex align-items-center">
                     <div class="product-title">
