@@ -440,6 +440,17 @@
             text-overflow: ellipsis;
             max-width: 130px;
         }
+
+
+        .variation-2 .item:not(:last-child)::after {
+            content: " • ";
+            background: none;
+            width: auto;
+            height: auto;
+            font-size: 18px;
+            color: #dee2e6;
+        }
+
     </style>
 </head>
 <body>
@@ -1232,7 +1243,7 @@
                 productItem.className = 'product-item';
                 productItem.innerHTML = `
                     <div>
-                        <h6 class="mb-1 list-overtext">${product.name}（${product.style}）</h6>
+                        <h6 class="mb-1 list-overtext" style="max-width:${window.innerWidth - 212}px;">${product.name}（${product.style}）</h6>
                         <small class="text-muted">编号: ${product.code} | 库存: <span style="color:${color}">${product.stock}<span></small>
                         <div class="mt-1">
                             <span class="badge ${getTypeClass(product.type)}">${product.type}</span>
@@ -1292,7 +1303,7 @@
                 customerItem.className = 'customer-item';
                 customerItem.innerHTML = `
                     <div>
-                        <h6 class="mb-1 list-overtext">${customer.name}</h6>
+                        <h6 class="mb-1 list-overtext" style="max-width:${window.innerWidth - 212}px;">${customer.name}</h6>
                         <small class="text-muted">编号: ${customer.id}</small>
                         <div class="mt-1">
                             <span class="badge bg-success">累计消费: ¥${customer.totalConsumption ? customer.totalConsumption.toFixed(2) : '0.00'}</span>
@@ -1430,7 +1441,7 @@
 
                 itemElement.innerHTML = `
                 <div>
-                    <h6 class="mb-0 list-overtext-currentorder">${item.name}</h6>
+                    <h6 class="mb-0 list-overtext-currentorder" style="max-width:${window.innerWidth-282}px;">${item.name}</h6>
                     <small class="text-muted">编号: ${item.code}（${item.style}）</small>                       
                 </div>
                 <div class="d-flex align-items-center">
@@ -1496,14 +1507,14 @@
                 let i = 1;
 
                 order.items.forEach(item => {
-                    content = content + item.name + (order.items.length == i ? "" : " | ");
+                    content = content + `<span class="item">`+item.name+`</span>`;
                     i++;
                 });
 
                 orderItem.className = 'order-item';
                 orderItem.innerHTML = `
                     <div>
-                        <h6 class="mb-1 list-overtext">${content}</h6>
+                        <h6 class="mb-1 list-overtext variation-2" style="max-width:${window.innerWidth - 212}px;">${content}</h6>
                         <small class="text-muted">${orderDate} | 客户: ${order.customerName || '未选择'}</small>
                         <div class="mt-1">
                             <span class="badge bg-primary">${order.items.length} 件商品</span>
