@@ -350,13 +350,83 @@
             transition: opacity 0.3s ease-in-out;
         }
 
-            .floating-alert.show {
-                opacity: 1;
-            }
+        .floating-alert.show {
+            opacity: 1;
+        }
 
-            .floating-alert .btn-close {
-                padding: 0.75rem;
-            }
+        .floating-alert .btn-close {
+            padding: 0.75rem;
+        }
+
+        /* 固定高度的滚动容器 */
+        #current-order-items {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eaeaea;
+            border-radius: 10px;
+            background-color: #f9fafc;
+            transition: all 0.3s ease;
+        }
+
+        /* 滚动条样式 */
+        #current-order-items::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #current-order-items::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        #current-order-items::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+
+        #current-order-items::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .product-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .product-tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: inline-flex;
+            align-items: center;
+            animation: pulse 2s infinite;
+        }
+
+        .tag-sale {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .tag-hot {
+            background: linear-gradient(45deg, #ff9f43, #ffbe7b);
+            color: white;
+        }
+
+        .tag-new {
+            background: linear-gradient(45deg, #10ac84, #1dd1a1);
+            color: white;
+        }
+
+        .tag-normal {
+            background: linear-gradient(45deg, #576574, #8395a7);
+            color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -967,9 +1037,17 @@
                 }
             });
 
+            let isSecondReques = false;//避免keydowns事件会重复触发blur事件
             document.addEventListener('blur', function (e) {
                 if (e.target.classList.contains('price-edit-input')) {
-                    savePriceChange(e.target);
+                    if (!isSecondReques) {
+                        isSecondReques = true;
+                        savePriceChange(e.target);
+                    }
+                    else {
+                        isSecondReques = false;
+                    }
+                    
                 }
             }, true); // 使用捕获阶段确保blur事件能触发
 
@@ -977,6 +1055,7 @@
             document.addEventListener('keydown', function (e) {
                 if (e.target.classList.contains('price-edit-input')) {
                     if (e.key === 'Enter') {
+                        isSecondReques = true;
                         savePriceChange(e.target);
                     } else if (e.key === 'Escape') {
                         cancelPriceEdit(e.target);
@@ -1143,7 +1222,7 @@
                         <h6 class="mb-1">${product.name}（${product.style}）</h6>
                         <small class="text-muted">编号: ${product.code} | 库存: <span style="color:${color}">${product.stock}<span></small>
                         <div class="mt-1">
-                            <span class="badge bg-secondary">${product.type}</span>
+                            <span class="badge ${getTypeClass(product.type)}">${product.type}</span>
                             <span class="badge bg-primary">¥${product.price.toFixed(2)}</span>
                         </div>
                     </div>
@@ -1157,6 +1236,7 @@
                     </div>
                 `;
                 productsList.appendChild(productItem);
+                //<span class="badge bg-secondary">${product.type}</span>
             });
 
             // 添加编辑和删除事件
@@ -1319,7 +1399,7 @@
 
             orderItems.innerHTML = '';
 
-            currentOrder.items.forEach((item, index) => {
+            currentOrder.items.slice().reverse().forEach((item, index) => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'current-order-item';
                 //itemElement.innerHTML = `
@@ -1335,18 +1415,20 @@
                 //    </div>
                 //`;
 
-
-
-
                 itemElement.innerHTML = `
                 <div>
-                    <h6 class="mb-0">${item.name}</h6>
-                    <small class="text-muted">编号: ${item.code}</small>
+                    <h6 class="mb-0">${item.name}（${item.style}</h6>
+                    <small class="text-muted">编号: ${item.code}</small>                       
                 </div>
                 <div class="d-flex align-items-center">
-                    <span class="me-3 fw-bold price-editable" data-index="${index}" data-original-price="${item.price}">
-                        ¥${item.price.toFixed(2)}
-                    </span>
+                    <div class="product-title">
+                        <span class="product-tag ${getTypeClass(item.type)}">
+                                <i class="fas fa-certificate tag-icon"></i>${item.type}
+                        </span>
+                        <span class="me-3 fw-bold price-editable" data-index="${index}" data-original-price="${item.price}">
+                            ¥${item.price.toFixed(2)}
+                        </span>
+                    </div>
                     <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
                         <i class="fas fa-times"></i>
                     </button>
@@ -2683,6 +2765,22 @@
             span.textContent = '¥' + originalPrice.toFixed(2);
 
             input.parentNode.replaceChild(span, input);
+        }
+
+        function getTypeClass(type) {
+            if (type === "特价") {
+                return "tag-sale";
+            }
+            else if (type === "新品") {
+                return "tag-new";
+            }
+            else if (type === "热门") {
+                return "tag-hot";
+            }
+            else {
+                return "tag-normal";
+            }
+
         }
     </script>
 </body>
