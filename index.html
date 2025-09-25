@@ -427,6 +427,12 @@
             color: white;
         }
 
+        .list-overtext {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
     </style>
 </head>
 <body>
@@ -1219,7 +1225,7 @@
                 productItem.className = 'product-item';
                 productItem.innerHTML = `
                     <div>
-                        <h6 class="mb-1">${product.name}（${product.style}）</h6>
+                        <h6 class="mb-1 list-overtext">${product.name}（${product.style}）</h6>
                         <small class="text-muted">编号: ${product.code} | 库存: <span style="color:${color}">${product.stock}<span></small>
                         <div class="mt-1">
                             <span class="badge ${getTypeClass(product.type)}">${product.type}</span>
@@ -1279,7 +1285,7 @@
                 customerItem.className = 'customer-item';
                 customerItem.innerHTML = `
                     <div>
-                        <h6 class="mb-1">${customer.name}</h6>
+                        <h6 class="mb-1 list-overtext">${customer.name}</h6>
                         <small class="text-muted">编号: ${customer.id}</small>
                         <div class="mt-1">
                             <span class="badge bg-success">累计消费: ¥${customer.totalConsumption ? customer.totalConsumption.toFixed(2) : '0.00'}</span>
@@ -1489,8 +1495,8 @@
 
                 orderItem.className = 'order-item';
                 orderItem.innerHTML = `
-                    <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                        <h6 class="mb-1">${content}</h6>
+                    <div>
+                        <h6 class="mb-1 list-overtext">${content}</h6>
                         <small class="text-muted">${orderDate} | 客户: ${order.customerName || '未选择'}</small>
                         <div class="mt-1">
                             <span class="badge bg-primary">${order.items.length} 件商品</span>
