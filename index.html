@@ -1504,13 +1504,13 @@
             sortedOrders.forEach(order => {
                 const orderDate = new Date(order.date).toLocaleString();
                 const orderItem = document.createElement('div');
-                let content = `<span style="font-weight: 700;">` + order.customerName +`：</span >`;
+                let content = `<span style="font-weight: 900;">` + order.customerName +`：</span >`;
 
 
                 let i = 1;
 
                 order.items.forEach(item => {
-                    content = content + `<span class="item">`+item.name+`</span>`;
+                    content = content + `<span class="item" style="font-size: 0.8rem;font-weight: 300;">`+item.name+`</span>`;
                     i++;
                 });
 
