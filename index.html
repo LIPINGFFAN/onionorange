@@ -452,21 +452,23 @@
         }
 
         .tag-currentorder-price {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            background: linear-gradient(45deg, #f82c2c, #ff8e8e);
             color: white;
             padding: 8px 12px;
-            border-radius: 20px;
+            border-radius: 15px;
+            font-size: 1.2rem;
         }
 
         .tag-currentorder-price2 {
-            background: linear-gradient(45deg, #ff9f43, #ffbe7b);
+/*            background: linear-gradient(45deg, #ff9f43, #ffbe7b);
             color: white;
             padding: 8px 12px;
-            border-radius: 20px;
+            border-radius: 20px;*/
+            font-size:1.5rem;
         }
 
         .order-summary2 {
-            background: linear-gradient(to right, #dfe6e9, #b2bec3);
+            background: linear-gradient(to right, #dfe6e9, #dfe6e9);
             padding: 20px;
             border-radius: 16px 16px 0 0;
             font-weight: 700 !important;
@@ -1441,7 +1443,7 @@
                     </div>
                 `;
                 document.getElementById('order-total').textContent = '¥0.00';
-                document.getElementById('order-num').textContent = '总计：0件商品';
+                document.getElementById('order-num').textContent = '总计：0 件商品';
                 return;
             }
 
@@ -1455,7 +1457,7 @@
 
                 itemElement.innerHTML = `
                 <div>
-                    <h6 class="mb-0 list-overtext-currentorder" style="font-weight: 700 !important;max-width:${window.innerWidth - 282}px;">${item.name}</h6>
+                    <h6 class="mb-0 list-overtext-currentorder" style="font-size: ${index==currentOrder.items.length - 1?1.2:1}rem;font-weight: 700 !important;max-width:${window.innerWidth - 282}px;">${item.name}</h6>
                     <small class="text-muted">编号: ${item.code}（${item.style}）</small>                       
                 </div>
                 <div class="d-flex align-items-center">
@@ -1476,7 +1478,7 @@
 
             // 计算并显示总商品数量
             currentOrder.num = currentOrder.items.length;
-            document.getElementById('order-num').textContent = `总计：${currentOrder.num}件商品`;
+            document.getElementById('order-num').textContent = `总计：${currentOrder.num} 件商品`;
 
             // 添加删除单个商品事件
             document.querySelectorAll('.remove-item').forEach(btn => {
