@@ -1728,6 +1728,9 @@
 
             renderCurrentOrder();
             renderOrders();
+
+            // 自动聚焦到扫描输入框
+            document.getElementById('product-scan').focus();
         }
 
         // 修改订单
@@ -1753,6 +1756,8 @@
                 //document.getElementById('selected-customer-info').style.display = 'none';
 
                 renderCurrentOrder();
+                // 自动聚焦到扫描输入框
+                document.getElementById('product-scan').focus();
                 showAlert('订单已取消', 'info');
             }
         }
