@@ -1005,6 +1005,11 @@
                     if (sectionId === 'customers-section') {
                         renderCustomers();
                     }
+                    // 如果是开单页面，聚焦扫描框
+                    if (sectionId === 'order-section') {
+                        // 自动聚焦到扫描输入框
+                        document.getElementById('product-scan').focus();
+                    }
                 });
             });
 
@@ -1656,6 +1661,8 @@
             const removedItem = currentOrder.items[index];
             currentOrder.items.splice(index, 1);
             renderCurrentOrder();
+            // 自动聚焦到扫描输入框
+            document.getElementById('product-scan').focus();
             showAlert(`已移除商品: ${removedItem.name}`, 'info');
         }
 
